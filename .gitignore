@@ -1,0 +1,4 @@
+./cqrs-es/cqrs/core/target
+./account/cmd/target
+./account/common/target
+./account/query/target

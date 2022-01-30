@@ -1,0 +1,59 @@
+version: "3.4"
+
+services:
+#  zookeeper:
+#    image: bitnami/zookeeper
+#    restart: always
+#    ports:
+#      - "2181:2181"
+#    volumes:
+#      - "zookeeper_data:/bitnami"
+#    environment:
+#      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:5.0.4
+    hostname: kafka
+    ports:
+      - "19092:19092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,LISTENER_LOCAL://localhost:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,LISTENER_LOCAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_COMPRESSION_TYPE: producer
+
+#  kafka:
+#    image: bitnami/kafka
+#    ports:
+#      - "9092:9092"
+#    restart: always
+#    volumes:
+#      - "kafka_data:/bitnami"
+#    environment:
+#      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+#      - ALLOW_PLAINTEXT_LISTENER=yes
+#      - KAFKA_LISTENERS=PLAINTEXT://:9092
+#      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+#    depends_on:
+#      - zookeeper
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
+
+networks:
+  default:
+    external:
+      name: techbankNet
