@@ -1,0 +1,1 @@
+Learning CQRS and Spring boot using kafka as message broker, also using mongodb for event sourcing.
